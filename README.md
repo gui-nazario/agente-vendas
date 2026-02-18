@@ -63,8 +63,9 @@ cd agente-vendas
 ````
 
 ###  2️⃣ Instalar dependências
+````bash
 pip install -r requirements.txt
-
+````
 3️⃣ Configurar variável de ambiente
 export DATABASE_URL="postgresql+psycopg2://USER:SENHA@HOST:PORT/DB"
 
