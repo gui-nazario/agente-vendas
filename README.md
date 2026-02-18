@@ -71,5 +71,8 @@ export DATABASE_URL="postgresql+psycopg2://USER:SENHA@HOST:PORT/DB"
 (No Windows PowerShell:)
 setx DATABASE_URL "postgresql+psycopg2://USER:SENHA@HOST:PORT/DB"
 
-4️⃣ Executar
+### 4️⃣ Executar
+
+```bash
 python agente.py
+
