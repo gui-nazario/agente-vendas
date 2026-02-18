@@ -55,11 +55,21 @@ PostgreSQL → SQLAlchemy → Pandas → Engine de Regras → Registro de Incide
 
 ## 🚀 Como Executar
 
-### 1️⃣ Clonar
+### 1️⃣ Clonar o repositório
 
 ```bash
 git clone https://github.com/SEU-USUARIO/agente-vendas.git
 cd agente-vendas
+````
+
+###  2️⃣ Instalar dependências
 pip install -r requirements.txt
-DATABASE_URL=postgresql+psycopg2://USER:SENHA@HOST:PORT/DB
+
+3️⃣ Configurar variável de ambiente
+export DATABASE_URL="postgresql+psycopg2://USER:SENHA@HOST:PORT/DB"
+
+(No Windows PowerShell:)
+setx DATABASE_URL "postgresql+psycopg2://USER:SENHA@HOST:PORT/DB"
+
+4️⃣ Executar
 python agente.py
