@@ -49,3 +49,17 @@ Detecta cliente que repetiu a mesma compra (mesmo valor no mesmo dia) 3 ou mais 
 
 ## 🏗 Arquitetura
 
+PostgreSQL → SQLAlchemy → Pandas → Engine de Regras → Registro de Incidentes (JSONB)
+
+---
+
+## 🚀 Como Executar
+
+### 1️⃣ Clonar
+
+```bash
+git clone https://github.com/SEU-USUARIO/agente-vendas.git
+cd agente-vendas
+pip install -r requirements.txt
+DATABASE_URL=postgresql+psycopg2://USER:SENHA@HOST:PORT/DB
+python agente.py
