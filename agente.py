@@ -95,37 +95,37 @@ def detectar_queda_faturamento(df: pd.DataFrame, queda_pct: float = 0.30):
     return None
 
 
-def detectar_vendas_zeradas(df: pd.DataFrame):
-    """
-    Vendas zeradas no último dia COMPLETO (faturamento = 0).
-    """
+def detectar_faturamento_muito_baixo(df: pd.DataFrame, limite: float = 10.0):
     if df.empty:
         return None
 
     por_dia = df.groupby("data_venda")["valor_total"].sum().sort_index()
-    por_dia = serie_por_dia_completo(por_dia)
 
-    if len(por_dia) < 1:
+    hoje = date.today()
+    if por_dia.index[-1] == hoje:
+        por_dia = por_dia.iloc[:-1]
+
+    if por_dia.empty:
         return None
 
     ultimo_dia = por_dia.index[-1]
     total = float(por_dia.iloc[-1])
 
-    print(f"DEBUG - Vendas zeradas? Dia {ultimo_dia} total={total:.2f}")
+    print(f"DEBUG - Faturamento último dia completo ({ultimo_dia}): {total:.2f}")
 
-    if total == 0:
+    if total <= limite:
         return {
-            "tipo": "vendas_zeradas",
-            "severidade": "critica",
-            "detalhe": f"Vendas zeradas no dia {ultimo_dia}",
+            "tipo": "faturamento_muito_baixo",
+            "severidade": "alta",
+            "detalhe": f"Faturamento muito baixo (≤ R$ {limite:.2f}) no dia {ultimo_dia}",
             "contexto": {
                 "dia": str(ultimo_dia),
-                "total": total,
-            },
+                "faturamento_total": total,
+                "limite_configurado": limite
+            }
         }
 
     return None
-
 
 def detectar_queda_numero_vendas(df: pd.DataFrame, queda_pct: float = 0.30):
     """
