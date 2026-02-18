@@ -4,10 +4,9 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 
 
-def registrar_incidente(engine, tipo, severidade, detalhe, contexto=None):
+def registrar_incidente(engine, tipo: str, severidade: str, detalhe: str, contexto: dict | None = None):
     """
-    Salva um incidente na tabela 'incidentes' do seu Neon.
-    Isso cria histórico para você ver no Power BI depois.
+    Salva um incidente na tabela 'incidentes' do Neon.
     """
     with engine.begin() as conn:
         conn.execute(
@@ -25,26 +24,24 @@ def registrar_incidente(engine, tipo, severidade, detalhe, contexto=None):
 
 
 def main():
-    # 1) Pega a URL do banco de uma variável de ambiente (GitHub Secret)
+    # Lê a conexão do Secret do GitHub
     db_url = os.environ.get("DATABASE_URL")
     if not db_url:
         raise RuntimeError("DATABASE_URL não configurada nos Secrets do GitHub.")
 
-    # 2) Cria conexão com o Neon
     engine = create_engine(db_url)
 
-    # 3) Lê vendas do banco
+    # Puxa as vendas
     df = pd.read_sql("SELECT * FROM vendas;", engine)
 
-    # 4) Faz uma regra simples: se faturamento total estiver baixo, gera alerta
+    # Regra simples (você ajusta depois)
     faturamento = float(df["valor_total"].sum())
+    limite = 100000.0
 
-    limite = 100000.0  # você pode ajustar depois
     if faturamento < limite:
         detalhe = f"Faturamento baixo: {faturamento:.2f} (limite {limite:.2f})"
         print("🚨 ALERTA:", detalhe)
 
-        # 5) Registra incidente no banco
         registrar_incidente(
             engine,
             tipo="FATURAMENTO_BAIXO",
