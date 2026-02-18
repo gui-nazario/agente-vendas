@@ -5,12 +5,14 @@ from sqlalchemy import create_engine, text
 
 
 def detectar_queda_ultimo_dia(df, queda_pct=0.30):
-    # Agrupa faturamento por dia
     por_dia = (
         df.groupby("data_venda")["valor_total"]
         .sum()
         .sort_index()
     )
+
+    print("\nDEBUG - Faturamento por dia:")
+    print(por_dia.tail(5))
 
     if len(por_dia) < 2:
         return None
@@ -21,8 +23,29 @@ def detectar_queda_ultimo_dia(df, queda_pct=0.30):
     faturamento_ultimo = por_dia.iloc[-1]
     faturamento_anterior = por_dia.iloc[-2]
 
-    if faturamento_anterior == 0:
-        return None
+    print("\nDEBUG - Comparando:")
+    print("Ultimo:", faturamento_ultimo)
+    print("Anterior:", faturamento_anterior)
+
+    variacao = (faturamento_ultimo - faturamento_anterior) / faturamento_anterior
+
+    print("DEBUG - Variação:", variacao)
+
+    if variacao <= -queda_pct:
+        return {
+            "tipo": "queda_faturamento",
+            "severidade": "alta",
+            "detalhe": f"Queda de {abs(variacao)*100:.2f}% no dia {ultimo_dia}",
+            "contexto": {
+                "ultimo_dia": str(ultimo_dia),
+                "faturamento_ultimo": float(faturamento_ultimo),
+                "faturamento_anterior": float(faturamento_anterior),
+                "variacao_pct": float(variacao * 100),
+            },
+        }
+
+    return None
+
 
     variacao = (faturamento_ultimo - faturamento_anterior) / faturamento_anterior
 
