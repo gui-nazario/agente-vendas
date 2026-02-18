@@ -1,93 +1,51 @@
-🧠 Agente de Monitoramento de Vendas
+# 🧠 Agente de Monitoramento de Vendas
 
-Sistema automatizado para detecção de anomalias em vendas utilizando Python, PostgreSQL e regras de negócio.
+Sistema automatizado para detecção de anomalias em vendas utilizando **Python, PostgreSQL e regras de negócio**.
 
 O agente analisa os dados diariamente, identifica comportamentos suspeitos e registra incidentes automaticamente.
 
-🎯 Problema que Resolve
+---
+
+## 🎯 Problema que Resolve
 
 Empresas precisam identificar rapidamente:
 
-📉 Queda abrupta de faturamento
-
-📊 Redução significativa no volume de vendas
-
-🚨 Faturamento anormalmente baixo
-
-🔍 Possível fraude por duplicidade de compras
+- 📉 Queda abrupta de faturamento  
+- 📊 Redução significativa no volume de vendas  
+- 🚨 Faturamento anormalmente baixo  
+- 🔍 Possível fraude por duplicidade de compras  
 
 Este agente automatiza essa análise.
 
-⚙️ Como Funciona
+---
 
-Consulta dados da tabela vendas
+## ⚙️ Como Funciona
 
-Converte os dados para DataFrame (Pandas)
+1. Consulta dados da tabela `vendas`
+2. Converte os dados para DataFrame (Pandas)
+3. Executa detectores de anomalia
+4. Aplica lógica de prioridade
+5. Registra incidentes na tabela `incidentes`
 
-Executa detectores de anomalia
+---
 
-Aplica lógica de prioridade
+## 🔍 Cenários Detectados
 
-Registra incidentes na tabela incidentes
-
-🔍 Cenários Detectados
-• Faturamento Muito Baixo
-
+### • Faturamento Muito Baixo
 Dispara quando o último dia completo tem faturamento ≤ R$ 10.
 
-• Queda de Faturamento
-
-Compara último dia completo com o anterior.
+### • Queda de Faturamento
+Compara último dia completo com o anterior.  
 Dispara se queda ≥ 30%.
 
-• Queda no Número de Vendas
-
-Compara volume diário de vendas.
+### • Queda no Número de Vendas
+Compara volume diário de vendas.  
 Dispara se queda ≥ 30%.
 
-• Possível Fraude / Duplicidade
-
+### • Possível Fraude / Duplicidade
 Detecta cliente que repetiu a mesma compra (mesmo valor no mesmo dia) 3 ou mais vezes.
 
-🏗 Arquitetura
+---
 
-PostgreSQL → SQLAlchemy → Pandas → Engine de Regras → Registro de Incidentes (JSONB)
+## 🏗 Arquitetura
 
-🚀 Como Executar
-1. Clonar
-git clone https://github.com/SEU-USUARIO/agente-vendas.git
-cd agente-vendas
-
-2. Instalar dependências
-pip install -r requirements.txt
-
-3. Configurar variável de ambiente
-
-Criar arquivo .env baseado em .env.example:
-
-DATABASE_URL=postgresql+psycopg2://USER:SENHA@HOST:PORT/DB
-
-4. Executar
-python agente.py
-
-🔐 Segurança
-
-Credenciais via variável de ambiente
-
-Nenhuma senha armazenada no código
-
-Secrets gerenciados via GitHub
-
-📌 Próximos Passos
-
-API REST (FastAPI)
-
-Dashboard de incidentes
-
-Notificação via Slack
-
-Detecção com Machine Learning
-
-👨‍💻 Autor
-
-Projeto desenvolvido para estudo de monitoramento automatizado e detecção de anomalias financeiras.
