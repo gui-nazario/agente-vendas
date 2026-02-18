@@ -274,11 +274,11 @@ def main():
 
     # Rodar todos os cenários
     for detector in [
-        lambda d: detectar_vendas_zeradas(d),
-        lambda d: detectar_queda_faturamento(d, queda_pct=0.30),
-        lambda d: detectar_queda_numero_vendas(d, queda_pct=0.30),
-        lambda d: detectar_possivel_fraude_duplicidade(d, limite_repeticoes=3),
-    ]:
+    lambda d: detectar_faturamento_muito_baixo(d, limite=10.0),
+    lambda d: detectar_queda_faturamento(d, queda_pct=0.30),
+    lambda d: detectar_queda_numero_vendas(d, queda_pct=0.30),
+    lambda d: detectar_possivel_fraude_duplicidade(d, limite_repeticoes=3),
+]:
         alerta = detector(df)
         if alerta:
             alertas.append(alerta)
