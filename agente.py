@@ -272,26 +272,36 @@ def main():
 
     alertas = []
 
-    # Rodar todos os cenários
-    for detector in [
+# Rodar todos os cenários
+for detector in [
     lambda d: detectar_faturamento_muito_baixo(d, limite=10.0),
     lambda d: detectar_queda_faturamento(d, queda_pct=0.30),
     lambda d: detectar_queda_numero_vendas(d, queda_pct=0.30),
     lambda d: detectar_possivel_fraude_duplicidade(d, limite_repeticoes=3),
 ]:
-        alerta = detector(df)
-        if alerta:
-            alertas.append(alerta)
+    alerta = detector(df)
+    if alerta:
+        alertas.append(alerta)
 
-    if alertas:
-        print(f"\n🚨 {len(alertas)} ALERTA(S) DETECTADO(S)")
-        for a in alertas:
-            print(f"- [{a['tipo']}] {a['detalhe']}")
-            registrar_incidente(engine, a)
-        print("✅ Incidente(s) registrado(s) na tabela incidentes.")
-    else:
-        total_geral = float(df["valor_total"].sum()) if not df.empty else 0.0
-        print(f"✅ OK: nenhum incidente detectado. Total geral (base inteira) = {total_geral:.2f}")
+# 🔥 FILTRO DE PRIORIDADE (COLOQUE AQUI)
+tipos = {a["tipo"] for a in alertas}
+
+if "faturamento_muito_baixo" in tipos:
+    alertas = [
+        a for a in alertas
+        if a["tipo"] in ("faturamento_muito_baixo", "possivel_fraude_duplicidade")
+    ]
+
+# Agora registra normalmente
+if alertas:
+    print(f"\n🚨 {len(alertas)} ALERTA(S) DETECTADO(S)")
+    for a in alertas:
+        print(f"- [{a['tipo']}] {a['detalhe']}")
+        registrar_incidente(engine, a)
+    print("✅ Incidente(s) registrado(s) na tabela incidentes.")
+else:
+    total_geral = float(df["valor_total"].sum()) if not df.empty else 0.0
+    print(f"✅ OK: nenhum incidente detectado. Total geral (base inteira) = {total_geral:.2f}")
 
 
 if __name__ == "__main__":
